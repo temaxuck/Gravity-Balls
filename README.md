@@ -8,7 +8,7 @@ Throw colourful balls that bounce off the walls and floor, pretty much like you'
 
 <img src="https://github.com/temaxuck/Gravity-Balls/blob/main/demo/demo.gif">
 
-## Build
+## Build from source
 
 To build the game on your local machine it is required to have c compiler and raylib library with all it's prerequisites installed (see [raylib docs](https://github.com/raysan5/raylib?tab=readme-ov-file#build-and-installation) how to achieve this). 
 
@@ -23,3 +23,7 @@ And then run it:
 ```shell
 ./build/game
 ```
+
+## Pre-builds
+
+Currently only one pre-builded executable for Linux x86-64 is available (see [build/](https://github.com/temaxuck/Gravity-Balls/tree/main/build) directory or [releases](https://github.com/temaxuck/Gravity-Balls/releases) page).
