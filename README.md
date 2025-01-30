@@ -6,6 +6,8 @@ A very small game written in C using [raylib library](https://github.com/raysan5
 
 Throw colourful balls that bounce off the walls and floor, pretty much like you'd throw Angry Birds.
 
+<img src="./demo/demo.gif">
+
 ## Build
 
 To build the game on your local machine it is required to have c compiler and raylib library with all it's prerequisites installed (see [raylib docs](https://github.com/raysan5/raylib?tab=readme-ov-file#build-and-installation) how to achieve this). 
