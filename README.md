@@ -6,7 +6,7 @@ A very small game written in C using [raylib library](https://github.com/raysan5
 
 Throw colourful balls that bounce off the walls and floor, pretty much like you'd throw Angry Birds.
 
-<img src="./demo/demo.gif">
+<img src="https://github.com/temaxuck/Gravity-Balls/blob/main/demo/demo.gif">
 
 ## Build
 
