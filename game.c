@@ -1,5 +1,5 @@
 /*
-  GRAVITY BALLS (v1.0.0) - Public Domain - https://github.com/temaxuck/Gravity-Balls
+  GRAVITY BALLS (v1.0.1) - Public Domain - https://github.com/temaxuck/Gravity-Balls
 
   A very small game written in C using raylib library (https://github.com/raysan5/raylib)
 
@@ -25,6 +25,9 @@
 // APPEARANCE
 #define BACKGROUND_COLOR GetColor(0x181818FF)
 #define DEFAULT_FONT_SIZE 24
+#define MARKER_SIZE 10
+#define MARKER_COLOR GetColor(0xFFFFFFFF)
+#define DOTTED_LINE_DOT_SIZE 3
 
 typedef struct {
   unsigned int width; 
@@ -40,9 +43,12 @@ typedef struct {
 } Ball;
 
 typedef struct {
-  Ball *balls;
+  Ball *balls; 
   size_t ballsCount;
+
+  bool isSpawningBall;
   Vector2 ballSpawnPos;
+  
   Window *window;
 } GameState;
 
@@ -56,6 +62,18 @@ void ShowDebugInfo() {
 
 Color GetRandomColor() {
   return ColorFromHSV((float)rand() / RAND_MAX * 360.0f, 1.0f, 1.0f);
+}
+
+void DrawDottedLine(Vector2 startPos, Vector2 endPos, float dotSize, Color color) {
+  assert(dotSize > 0.0f && "Dot size must be greater than 0");
+    
+  float progress = .0f;
+  float step = 2 * dotSize / Vector2Distance(startPos, endPos);
+
+  while (progress < 1.0f) {
+    DrawCircleV(Vector2Lerp(startPos, endPos, progress), dotSize, color);
+    progress += 2 * step;
+  }
 }
 
 void DrawBall(Ball *b) {
@@ -127,13 +145,20 @@ void Update(GameState *s) {
     UpdateBall(&s->balls[i], s->window);
   }
 
+  if (s->isSpawningBall) {
+    DrawCircle(s->ballSpawnPos.x, s->ballSpawnPos.y, MARKER_SIZE, MARKER_COLOR);
+    DrawDottedLine(GetMousePosition(), s->ballSpawnPos, DOTTED_LINE_DOT_SIZE, MARKER_COLOR);
+  }
+
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
     s->ballSpawnPos = GetMousePosition();
+    s->isSpawningBall = 1;
   }
 
   if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
     Vector2 vel = Vector2Subtract(s->ballSpawnPos, GetMousePosition());
     SpawnBall(s, s->ballSpawnPos, vel, fmin(MAX_BALL_SPEED, Vector2Length(vel)));
+    s->isSpawningBall = 0;
   }
 }
 
