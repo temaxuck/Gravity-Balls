@@ -27,3 +27,11 @@ And then run it:
 ## Pre-builds
 
 Currently only one pre-builded executable for Linux x86-64 is available (see [build/](https://github.com/temaxuck/Gravity-Balls/tree/main/build) directory or [releases](https://github.com/temaxuck/Gravity-Balls/releases) page).
+
+## Patch notes
+
+### 2025-02-05
+
+**New features**
+
+- When throwing balls player now can see the trajectory of the ball to be spawned (see [demo](https://github.com/temaxuck/Gravity-Balls?tab=readme-ov-file#game-description))
