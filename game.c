@@ -80,7 +80,39 @@ void DrawBall(Ball *b) {
   DrawCircle(b->pos.x, b->pos.y, b->radius, b->color);
 }
 
+void HandleCollision(Ball *b1, Ball *b2) {
+  // J = J1 = -J2 (J - impulse, the conservation of the momentum law)
+  // J = lambda * n
+  // V1 = v1 + lambda / m1 * n
+  // V2 = v2 - lambda / m2 * n
+  // Since we ignore mass, or say it equals to 1:
+  // V1 = v1 + lambda * n
+  // V2 = v2 - lambda * n
+
+  if (CheckCollisionCircles(b1->pos, b1->radius, b2->pos, b2->radius)) {
+    Vector2 dx = Vector2Subtract(b2->pos, b1->pos); // position difference
+    float dxLength = Vector2Length(dx); // distance between balls' center
+
+    // Normal vector of the forces applied: dx / dxLength
+    Vector2 n = Vector2Scale(dx, 1.0f / dxLength);
+    // Relative velocity of the first ball towards the second: v1 - v2
+    Vector2 dV = Vector2Subtract(b1->velocity, b2->velocity);
+
+    float n_dV = Vector2DotProduct(n, dV); // <n, dV>
+    // lambda: -2 * m1*m2 / (m1 + m2) * <n, dV>
+    // Since we suppose that all the masses are equal to 1 the lambda factor
+    // equals to the negative value of the dot product of the normal and
+    // relative velocity.
+    float lambda = -n_dV;
+    Vector2 factor = Vector2Scale(n, lambda); // lambda * n
+
+    b1->velocity = Vector2Add(b1->velocity, factor);
+    b2->velocity = Vector2Subtract(b2->velocity, factor);
+  }
+}
+
 void UpdateBall(Ball *b, Window *w) {
+  // TODO: Move walls and floor collision to another function. 
   if (b->pos.x - b->radius < 0) {
     b->pos.x = b->radius;
   } else if (b->pos.x + b->radius > w->width) {
@@ -116,6 +148,9 @@ void UpdateBall(Ball *b, Window *w) {
 }
 
 void SpawnBall(GameState *s, Vector2 pos, Vector2 vel, float magnitude) {
+  // TODO: Instead of doing realloc every time we spawn a ball, fill array until
+  // the items count has reached capacity and then incrementally extend it's
+  // capacity
   Ball *newBalls = realloc(s->balls, sizeof(Ball) * (s->ballsCount + 1));
   assert(newBalls != NULL); // Couldn't allocate more space for an array on the heap
   s->balls = newBalls;
@@ -141,6 +176,9 @@ void Update(GameState *s) {
   #endif
 
   for (size_t i = 0; i < s->ballsCount; i++) {
+    for (size_t j = i + 1; j < s->ballsCount; j++) {
+      HandleCollision(&s->balls[i], &s->balls[j]);
+    }
     DrawBall(&s->balls[i]);
     UpdateBall(&s->balls[i], s->window);
   }
