@@ -1,5 +1,5 @@
 /*
-  GRAVITY BALLS (v1.0.1) - Public Domain - https://github.com/temaxuck/Gravity-Balls
+  GRAVITY BALLS (v1.1.0) - Public Domain - https://github.com/temaxuck/Gravity-Balls
 
   A very small game written in C using raylib library (https://github.com/raysan5/raylib)
 
