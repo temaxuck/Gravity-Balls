@@ -3,7 +3,8 @@
 
   A very small game written in C using raylib library (https://github.com/raysan5/raylib)
 
-  Game description: Throw colourful balls that bounce off the walls and floor, pretty much like you'd throw Angry Birds.
+  Game description: Throw those colourful bouncy juicy balls, pretty much like
+                    you'd throw Angry Birds.
 */
 
 #include <assert.h>
