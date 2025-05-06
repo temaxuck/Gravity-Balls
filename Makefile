@@ -6,7 +6,7 @@ BUILD_DIR        ?= "./build"
 IN_FILE          ?= "./game.c"
 
 web: build_dir
-	emcc -o $(BUILD_DIR)/web/game.html $(IN_FILE) -Os -Wall					\
+	emcc -o $(BUILD_DIR)/web/index.html $(IN_FILE) -Os -Wall				\
           $(LIBRAYLIB_A_PATH) -I. -I$(RAYLIB_H_DIR)							\
           -L. -L$(LIBRAYLIB_A_PATH) -sUSE_GLFW=3 -sASYNCIFY					\
           -sFORCE_FILESYSTEM -sEXPORTED_FUNCTIONS=_main,_malloc,_free		\
