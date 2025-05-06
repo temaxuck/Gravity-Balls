@@ -36,9 +36,13 @@ Currently only [web](https://temaxuck.github.io/Gravity-Balls/) and Linux x86-64
 
 ### 2025-05-06
 
-**Update**
+**Updates**
 
-- The game has been built for web. Explore it [here](https://temaxuck.github.io/Gravity-Balls/).
+- The game has been built for web and deployed to github pages. Explore it [here](https://temaxuck.github.io/Gravity-Balls/)
+
+**Fixes**
+
+- Fix frame dependency
 
 ### 2025-04-23
 

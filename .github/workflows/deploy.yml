@@ -1,0 +1,26 @@
+name: Deploy to github pages
+
+on:
+  release:
+    types: [published]
+  push:
+    paths:
+      - build/web/**
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to gh-pages
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          email: gorropand@gmail.com
+          build_dir: build/web/
+          branch: gh-pages
