@@ -22,9 +22,10 @@
 
 // PHYSICS
 #define MAX_FPS 120
-#define MAX_BALL_SPEED 10
-#define GRAVITY 10.0f
-#define FRICTION_X 5 // force that reduces balls' horizontal speed when they hit the walls (in %)
+#define MAX_BALL_SPEED 3355.0f
+#define SPAWN_BALL_SPEED_MULTIPLIER 3.355f
+#define GRAVITY 1000.0f
+#define FRICTION_X 2.5f // force that reduces balls' horizontal speed when they hit the walls (in %)
 #define FRICTION_Y 0 // force that reduces balls' vertical speed when they hit the floor (in %) 
 
 // APPEARANCE
@@ -83,6 +84,11 @@ void DrawDottedLine(Vector2 startPos, Vector2 endPos, float dotSize, Color color
 
 void DrawBall(Ball *b) {
     DrawCircle(b->pos.x, b->pos.y, b->radius, b->color);
+    #if DEBUG
+        char label[50];
+        sprintf(label, "Pos: (%.2f, %.2f);\nVel: (%.2f, %.2f) = %.2f", b->pos.x, b->pos.y, b->velocity.x, b->velocity.y, Vector2Length(b->velocity));
+        DrawText(label, b->pos.x, b->pos.y, DEFAULT_FONT_SIZE * 0.8f, WHITE);
+    #endif
 }
 
 void HandleCollision(Ball *b1, Ball *b2) {
@@ -117,38 +123,28 @@ void HandleCollision(Ball *b1, Ball *b2) {
 }
 
 void UpdateBall(Ball *b, Window *w) {
-    // TODO: Move walls and floor collision to another function.
-    if (b->pos.x - b->radius < 0) {
-        b->pos.x = b->radius;
-    } else if (b->pos.x + b->radius > w->width) {
-        b->pos.x = w->width - b->radius;
-    }
-
-    if (b->pos.y + b->radius > w->height) {
-        b->pos.y = w->height - b->radius;
-    }
-
     float dt = GetFrameTime();
-    Vector2 nextPos = Vector2Add(b->pos, b->velocity);
+    b->velocity.y += GRAVITY * dt;
 
-    if (nextPos.x + b->radius > w->width || nextPos.x - b->radius < 0) {
-        b->velocity.x *= FRICTION_X * 0.01f - 1.0f;
+    Vector2 nextPos = Vector2Add(b->pos, Vector2Scale(b->velocity, dt));
+
+    // TODO: Move walls and floor collision to another function.
+    if (nextPos.x - b->radius < 0) {
+        nextPos.x = b->radius;
+        b->velocity.x *= (FRICTION_X * 0.01f - 1.0f);
+    } else if (nextPos.x + b->radius > w->width) {
+        nextPos.x = w->width - b->radius;
+        b->velocity.x *= (FRICTION_X * 0.01f - 1.0f);
     }
 
     if (nextPos.y + b->radius > w->height) {
-        b->velocity.y *= FRICTION_Y * 0.01f - 1.0f;
+        nextPos.y = w->height - b->radius;
+        b->velocity.y *= (FRICTION_Y * 0.01f - 1.0f);
         if (fabs(b->velocity.y) > 1.0f) {
             b->color = GetRandomColor();
         }
     }
 
-    b->velocity.y += GRAVITY * dt;
-
-#if DEBUG
-    char label[40];
-    sprintf(label, "Pos: (%.2f, %.2f);\nVel: (%.2f, %.2f)", b->pos.x, b->pos.y, b->velocity.x, b->velocity.y);
-    DrawText(label, b->pos.x, b->pos.y, DEFAULT_FONT_SIZE * 0.8f, WHITE);
-#endif
     b->pos = nextPos;
 }
 
@@ -200,7 +196,7 @@ void Update(GameState *s) {
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
         Vector2 vel = Vector2Subtract(s->ballSpawnPos, GetMousePosition());
-        SpawnBall(s, s->ballSpawnPos, vel, fmin(MAX_BALL_SPEED, Vector2Length(vel)));
+        SpawnBall(s, s->ballSpawnPos, vel, fmin(MAX_BALL_SPEED, SPAWN_BALL_SPEED_MULTIPLIER * Vector2Length(vel)));
         s->isSpawningBall = 0;
     }
 }
