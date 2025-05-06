@@ -30,6 +30,12 @@ Currently only one pre-builded executable for Linux x86-64 is available (see [bu
 
 ## Patch notes
 
+## 2025-04-23
+
+**New features**
+
+- Balls collide with each other now!
+
 ### 2025-02-05
 
 **New features**
