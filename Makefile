@@ -5,6 +5,8 @@ SHELL_FILE       ?= "./shell.html"
 BUILD_DIR        ?= "./build"
 IN_FILE          ?= "./game.c"
 
+build_all: web linux
+
 web: build_dir
 	emcc -o $(BUILD_DIR)/web/index.html $(IN_FILE) -Os -Wall				\
           $(LIBRAYLIB_A_PATH) -I. -I$(RAYLIB_H_DIR)							\
