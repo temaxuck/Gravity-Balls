@@ -3,7 +3,7 @@
 #include <math.h>
 
 #ifndef DA_INITIAL_CAPACITY
-#define DA_INITIAL_CAPACITY 32 
+#define DA_INITIAL_CAPACITY 32
 #endif
 
 #ifndef DA_GROWTH_FACTOR
@@ -15,7 +15,7 @@
     items_type *items;                          \
     size_t count;                               \
     size_t capacity;                            \
-  } type_name;                                       
+  } type_name;
 #define da_init(da_type) (da_type){.items = NULL, .count = 0, .capacity = 0}
 #define da_free(da) do {                        \
     if ((da)->items != NULL)                    \
@@ -31,4 +31,4 @@
       assert((da)->items != NULL && "Not enough memory to allocate for the dynamic array"); \
     }                                                                   \
     (da)->items[(da)->count++] = (item);                                \
-} while(0)               
+} while(0)
