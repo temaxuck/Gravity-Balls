@@ -14,8 +14,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "da.h"
+
 #if defined(PLATFORM_WEB)
-    #include <emscripten/emscripten.h>
+#include <emscripten/emscripten.h>
 #endif
 
 #define DEBUG false
@@ -48,9 +50,10 @@ typedef struct {
     Vector2 velocity;
 } Ball;
 
+da_def(Ball, Balls);
+
 typedef struct {
-    Ball *balls;
-    size_t ballsCount;
+    Balls *balls;
 
     bool isSpawningBall;
     Vector2 ballSpawnPos;
@@ -84,11 +87,11 @@ void DrawDottedLine(Vector2 startPos, Vector2 endPos, float dotSize, Color color
 
 void DrawBall(Ball *b) {
     DrawCircle(b->pos.x, b->pos.y, b->radius, b->color);
-    #if DEBUG
-        char label[50];
-        sprintf(label, "Pos: (%.2f, %.2f);\nVel: (%.2f, %.2f) = %.2f", b->pos.x, b->pos.y, b->velocity.x, b->velocity.y, Vector2Length(b->velocity));
-        DrawText(label, b->pos.x, b->pos.y, DEFAULT_FONT_SIZE * 0.8f, WHITE);
-    #endif
+#if DEBUG
+    char label[50];
+    sprintf(label, "Pos: (%.2f, %.2f);\nVel: (%.2f, %.2f) = %.2f", b->pos.x, b->pos.y, b->velocity.x, b->velocity.y, Vector2Length(b->velocity));
+    DrawText(label, b->pos.x, b->pos.y, DEFAULT_FONT_SIZE * 0.8f, WHITE);
+#endif
 }
 
 void HandleCollision(Ball *b1, Ball *b2) {
@@ -149,13 +152,6 @@ void UpdateBall(Ball *b, Window *w) {
 }
 
 void SpawnBall(GameState *s, Vector2 pos, Vector2 vel, float magnitude) {
-    // TODO: Instead of doing realloc every time we spawn a ball, fill array until
-    // the items count has reached capacity and then incrementally extend it's
-    // capacity
-    Ball *newBalls = realloc(s->balls, sizeof(Ball) * (s->ballsCount + 1));
-    assert(newBalls != NULL); // Couldn't allocate more space for an array on the heap
-    s->balls = newBalls;
-
     Ball spawnedBall = (Ball) {
         .radius = fmin(s->window->width, s->window->height) * 0.168 * 0.1,
         .color = GetRandomColor(),
@@ -163,8 +159,7 @@ void SpawnBall(GameState *s, Vector2 pos, Vector2 vel, float magnitude) {
         .velocity = Vector2Scale(Vector2Normalize(vel), magnitude),
     };
 
-    s->balls[s->ballsCount] = spawnedBall;
-    s->ballsCount += 1;
+    da_append(s->balls, spawnedBall);
 }
 
 
@@ -176,12 +171,12 @@ void Update(GameState *s) {
     ShowDebugInfo();
 #endif
 
-    for (size_t i = 0; i < s->ballsCount; i++) {
-        for (size_t j = i + 1; j < s->ballsCount; j++) {
-            HandleCollision(&s->balls[i], &s->balls[j]);
+    for (size_t i = 0; i < s->balls->count; i++) {
+        for (size_t j = i + 1; j < s->balls->count; j++) {
+            HandleCollision(&s->balls->items[i], &s->balls->items[j]);
         }
-        DrawBall(&s->balls[i]);
-        UpdateBall(&s->balls[i], s->window);
+        DrawBall(&s->balls->items[i]);
+        UpdateBall(&s->balls->items[i], s->window);
     }
 
     if (s->isSpawningBall) {
@@ -211,10 +206,9 @@ int main(void) {
         .height = 720,
         .title = "Gravity Balls",
     };
-
     GameState s = {
         .window = &w,
-        .balls = NULL,
+        .balls = &da_init(Balls),
     };
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -231,7 +225,7 @@ int main(void) {
         UpdateDrawFrame(&s);
     }
 #endif
-    free(s.balls);
+    da_free(s.balls);
 
     return 0;
 }
