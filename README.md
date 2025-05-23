@@ -34,24 +34,12 @@ Currently only [web](https://temaxuck.github.io/Gravity-Balls/) and Linux x86-64
 
 ## Patch notes
 
-### 2025-05-06
+**v1.2.1**
 
 **Updates**
 
-- The game has been built for web and deployed to github pages. Explore it [here](https://temaxuck.github.io/Gravity-Balls/)
+- Gravity was tweaked for a slightly better feel
 
 **Fixes**
 
-- Fix frame dependency
-
-### 2025-04-23
-
-**New features**
-
-- Balls collide with each other now!
-
-### 2025-02-05
-
-**New features**
-
-- When throwing balls player now can see the trajectory of the ball to be spawned (see [demo](https://github.com/temaxuck/Gravity-Balls?tab=readme-ov-file#game-description))
+- Optimized the way objects are stored in memory
