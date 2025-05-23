@@ -1,5 +1,5 @@
 /*
-  GRAVITY BALLS (v1.1.0) - Public Domain - https://github.com/temaxuck/Gravity-Balls
+  GRAVITY BALLS (v1.2.1) - Public Domain - https://github.com/temaxuck/Gravity-Balls
 
   A very small game written in C using raylib library (https://github.com/raysan5/raylib)
 
@@ -26,7 +26,7 @@
 #define MAX_FPS 120
 #define MAX_BALL_SPEED 3355.0f
 #define SPAWN_BALL_SPEED_MULTIPLIER 3.355f
-#define GRAVITY 1000.0f
+#define GRAVITY 2414.2f
 #define FRICTION_X 2.5f // force that reduces balls' horizontal speed when they hit the walls (in %)
 #define FRICTION_Y 0 // force that reduces balls' vertical speed when they hit the floor (in %) 
 
